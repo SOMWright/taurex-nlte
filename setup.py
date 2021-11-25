@@ -19,4 +19,5 @@ setup(name='taurex_nlte',
       entry_points=entry_points,
       provides=provides,
       requires=requires,
-      install_requires=install_requires)
+      install_requires=install_requires,
+      version="0.0.1")
