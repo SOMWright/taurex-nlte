@@ -2,10 +2,11 @@ import numpy as np
 from taurex.contributions import AbsorptionContribution
 from taurex.cache.opacitycache import OpacityCache
 
-#Could potentially use a Mixin here, potentially
+
 class NLTEAbsorption(AbsorptionContribution):
+
     def __init__(self, rot_offset=None, vib_offset=None):
-        super().__init__('Absorption')
+        super().__init__()
         self._opacity_cache = OpacityCache()
         self._rot_offset = rot_offset
         self._vib_offset = vib_offset
@@ -35,3 +36,7 @@ class NLTEAbsorption(AbsorptionContribution):
 
     def set_vib_offset(self, vib_offset):
         self._vib_offset = vib_offset
+
+    @classmethod
+    def input_keywords(self):
+        return ['Non-LTE Absorption', 'NLTEAbsorption', ]

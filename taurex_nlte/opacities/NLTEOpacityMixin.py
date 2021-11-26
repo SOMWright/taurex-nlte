@@ -1,8 +1,8 @@
 import numpy as np
-from taurex.opacity import Opacity
 
 
-class NLTEOpacity(Opacity):
+class NLTEOpacityMixin():
+
     @property
     def vibTemperatureGrid(self):
         return None

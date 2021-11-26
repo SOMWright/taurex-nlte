@@ -1,0 +1,38 @@
+[Global]
+xsec_path = /Users/Sam/Desktop/PhD/taurex3/data/plugin_test_data/
+
+[Chemistry]
+chemistry_type = taurex
+
+    [[H2O]]
+    gas_type = constant
+    mix_ratio = 1e-3
+
+[Temperature]
+profile_type = isothermal
+T = 1864
+
+[Pressure]
+profile_type = Simple
+atm_min_pressure = 1e-5
+atm_max_pressure = 1e6
+nlayers = 100
+
+[Planet]
+planet_type = simple
+planet_radius = 1.9
+planet_mass = 1.47
+
+[Star]
+star_type = blackbody
+radius = 1.657
+temperature = 6360
+
+[Model]
+model_type = transmission
+
+    [[NLTEAbsorption]]
+
+
+
+

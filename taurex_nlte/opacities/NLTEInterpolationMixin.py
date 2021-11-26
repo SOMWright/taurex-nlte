@@ -1,11 +1,9 @@
 import numpy as np
-from taurex.opacity import interpolateopacity
 from taurex.util.math import intepr_bilin, interp_exp_and_lin, interp_lin_only, interp_exp_only
-from .NLTEOpacity import NLTEOpacity
 from ..util.nltemath import interp_trilin
 
 
-class InterpolatingOpacityNLTE(NLTEOpacity, interpolateopacity):
+class NLTEInterpolationMixin():
 
     @property
     def vibTemperatureBounds(self):

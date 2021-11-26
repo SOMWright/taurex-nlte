@@ -1,16 +1,15 @@
 import numpy as np
 from taurex.opacity import HDF5Opacity
 from taurex.mpi import allocate_as_shared
-from .NLTEOpacity import NLTEOpacity
-from .NLTEinterpolateopacity import InterpolatingOpacityNLTE
+from .NLTEOpacityMixin import NLTEOpacityMixin
+from .NLTEInterpolationMixin import NLTEInterpolationMixin
 
 
-class NLTEHDF5Opacity(HDF5Opacity, NLTEOpacity, InterpolatingOpacityNLTE):
-
+class NLTEHDF5Opacity(HDF5Opacity, NLTEInterpolationMixin, NLTEOpacityMixin):
 
     @classmethod
     def priority(cls):
-        #Ensure that Non LTE HDF5 Class is tried first when loading opacities
+        # Ensure that Non LTE HDF5 Class is tried first when loading opacities
         return 1
 
     def _load_hdf_file(self, filename):
