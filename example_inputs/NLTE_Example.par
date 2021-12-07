@@ -4,7 +4,7 @@ xsec_path = /Users/Sam/Desktop/PhD/taurex3/data/plugin_test_data/
 [Chemistry]
 chemistry_type = taurex
 
-    [[H2O]]
+    [[AlONLTE]]
     gas_type = constant
     mix_ratio = 1e-3
 
@@ -32,7 +32,7 @@ temperature = 6360
 model_type = transmission
 
     [[NLTEAbsorption]]
-
+    rot_offset = -1000
 
 
 

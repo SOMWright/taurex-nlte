@@ -8,7 +8,7 @@ requires = []
 
 install_requires = ['taurex', ]
 
-entry_points = {'taurex.plugins': 'nlte = taurex_nlte'}
+entry_points = {'taurex.plugins': 'TauREx Non-LTE = taurex_nlte'}
 
 setup(name='taurex_nlte',
       author="Sam Wright",
