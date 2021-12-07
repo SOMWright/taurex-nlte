@@ -1,12 +1,16 @@
-import numpy as np
+import taurex.util.util
 from taurex.contributions import AbsorptionContribution
 from taurex.cache.opacitycache import OpacityCache
+from ..util.util import NLTE_mol_split_func
 
 
 class NLTEAbsorption(AbsorptionContribution):
 
     def __init__(self, rot_offset=None, vib_offset=None):
+        taurex.util.util.split_molecule_elements = NLTE_mol_split_func
         super().__init__()
+        self.info(
+            "NLTE Absorption Selected: Overriding Molecule Split Utility Function to Support Non-LTE Molecule Naming")
         self._opacity_cache = OpacityCache()
         self._rot_offset = rot_offset
         self._vib_offset = vib_offset
