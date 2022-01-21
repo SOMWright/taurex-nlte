@@ -1,5 +1,5 @@
 [Global]
-xsec_path = ../taurex3/data/plugin_test_data/
+xsec_path = /Users/sam/Documents/PhD/taurex3/data/plugin_test_data/
 
 [Chemistry]
 chemistry_type = taurex
