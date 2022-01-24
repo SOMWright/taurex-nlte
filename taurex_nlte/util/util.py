@@ -44,3 +44,18 @@ def NLTE_mol_split_func(molecule=None, tokens=None):
         length += 1
 
     return elems
+
+def generate_profile_dict_with_bitemp(model):
+    out = {}
+    out['temp_profile']=model.temperatureProfile
+    out['nlte_temp_profile']=model._temperature_profile.nlte_profile
+    out['active_mix_profile']=model.chemistry.activeGasMixProfile
+    out['inactive_mix_profile']=model.chemistry.inactiveGasMixProfile
+    out['density_profile']=model.densityProfile
+    out['scaleheight_profile']=model.scaleheight_profile
+    out['altitude_profile']=model.altitudeProfile
+    out['gravity_profile']=model.gravity_profile
+    out['pressure_profile']=model.pressureProfile
+    if model.chemistry.hasCondensates:
+        out['condensate_profile'] = model.chemistry.condensateMixProfile
+    return out

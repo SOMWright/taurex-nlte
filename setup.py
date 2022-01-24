@@ -8,7 +8,10 @@ requires = []
 
 install_requires = ['taurex', ]
 
-entry_points = {'taurex.plugins': 'TauREx Non-LTE = taurex_nlte'}
+console_scripts = ['taurex-nlte-plot=taurex_nlte.nlte_plot.nlte_plotter:main']
+
+entry_points = {'taurex.plugins': 'TauREx Non-LTE = taurex_nlte',
+                'console_scripts': console_scripts}
 
 setup(name='taurex_nlte',
       author="Sam Wright",

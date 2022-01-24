@@ -1,6 +1,6 @@
-from .tprofile import TemperatureProfile
 import numpy as np
 from enum import Enum
+from taurex.temperature import TemperatureProfile
 from taurex.data.fittable import fitparam
 from taurex.util import movingaverage
 from taurex.exceptions import InvalidModelException
@@ -20,7 +20,6 @@ class InvalidTemperatureException(InvalidModelException):
 
 
 class NLTETempProfile(TemperatureProfile):
-    raise Exception("NOT YET PROPERLY IMPLEMENTED MUST SEPERATED OUT ADDITIONAL PROFILE")
 
     def __init__(self, Trot_surface=1500.0, Trot_top=200.0, Tvib_surface=1500.0, Tvib_top=200.0, P_surface=None,
                  P_top=None, trot_points=[], tvib_points=[], pressure_points=[],
@@ -48,14 +47,14 @@ class NLTETempProfile(TemperatureProfile):
         self.generate_rot_temperature_fitting_params()
 
     def _assign_profile_temp_types(self, physics_temperature: str) -> None:
-        if physics_temperature.lower() is 'vibrational' or physics_temperature.lower() is 'vib':
+        if physics_temperature.lower() == 'vibrational' or physics_temperature.lower() == 'vib':
             self.info("Taking vibrational temperature for physics temperature")
-            self.profile_temp_type = TemperatureTypeEnum.VIBRATIONAL
-            self.nlte_profile_temp_type = TemperatureTypeEnum.ROTATIONAL
+            self._profile_temp_type = TemperatureTypeEnum.VIBRATIONAL
+            self._nlte_profile_temp_type = TemperatureTypeEnum.ROTATIONAL
         else:
             self.info("Taking rotational temperature for physics temperature")
-            self.profile_temp_type = TemperatureTypeEnum.ROTATIONAL
-            self.nlte_profile_temp_type = TemperatureTypeEnum.VIBRATIONAL
+            self._profile_temp_type = TemperatureTypeEnum.ROTATIONAL
+            self._nlte_profile_temp_type = TemperatureTypeEnum.VIBRATIONAL
 
     @fitparam(param_name='Tvib_surface',
               param_latex='$Tvib_\\mathrm{surf}$',
@@ -228,25 +227,22 @@ class NLTETempProfile(TemperatureProfile):
         if P_top is None or P_top < 0:
             P_top = self.pressure_profile[-1]
 
-        Pnodes = [P_surface, *P_points, P_Top]
+        Pnodes = [P_surface, *P_points, P_top]
 
-        self.check_profile(Pnodes, Tvibnodes)
-        self.check_profile(Pnodes, Trotnodes)
+        self.check_profile(Pnodes, Tnodes)
 
-        if np.all(Tvibnodes == Tvibnodes[0]):
-            return np.ones_like(self.pressure_profile) * Tvibnodes[0]
+        if np.all(Tnodes == Tnodes[0]):
+            return np.ones_like(self.pressure_profile) * Tnodes[0]
 
-        if np.all(Trotnodes == Trotnodes[0]):
-            return np.ones_like(self.pressure_profile) * Trotnodes[0]
 
-        TP_vib = np.interp((np.log10(self.pressure_profile[::-1])),
-                           np.log10(Pnodes[::-1]), Tvibnodes)
+        profile = np.interp((np.log10(self.pressure_profile[::-1])),
+                           np.log10(Pnodes[::-1]), Tnodes)
 
         return profile
 
     @property
     def nlte_profile(self):
-        if self.nlte_profile_temp_type is TemperatureTypeEnum.ROTATIONAL:
+        if self._nlte_profile_temp_type is TemperatureTypeEnum.ROTATIONAL:
             return self.profile_calculation(self._rot_T_surface, self._rot_t_points, self._rot_T_top, self._P_surface,
                                             self._p_points, self._P_top)
         else:
@@ -255,16 +251,16 @@ class NLTETempProfile(TemperatureProfile):
 
     @property
     def profile_temp_type(self):
-        return self.profile_temp_type
+        return self._profile_temp_type
 
     @property
     def nlte_profile_temp_type(self):
-        return self.nlte_profile_temp_type
+        return self._nlte_profile_temp_type
 
     @property
     def profile(self):
 
-        if self.profile_temp_type is TemperatureTypeEnum.ROTATIONAL:
+        if self._profile_temp_type is TemperatureTypeEnum.ROTATIONAL:
             return self.profile_calculation(self._rot_T_surface, self._rot_t_points, self._rot_T_top, self._P_surface,
                                             self._p_points, self._P_top)
         else:
@@ -292,7 +288,8 @@ class NLTETempProfile(TemperatureProfile):
         temperature.write_scalar('P_top', P_top)
         temperature.write_array('pressure_points', np.array(self._p_points))
 
-        temperature.write_scalar('smoothing_window', self._smooth_window)
+        temperature.write_scalar('physics_temperature', self.profile_temp_type.name)
+        temperature.write_scalar('nlte_temperature', self.nlte_profile_temp_type.name)
 
         return temperature
 

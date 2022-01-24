@@ -1,3 +1,4 @@
 from .opacities import NLTEHDF5Opacity
 from .contributions import NLTEAbsorption
-from .nlte_profiles import NPointGas
+from .nlte_profiles import NPointGas, NLTETempProfile
+from .model import NLTEModelMixin

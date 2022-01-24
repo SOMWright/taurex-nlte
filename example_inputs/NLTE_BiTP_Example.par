@@ -1,0 +1,57 @@
+[Global]
+cia_path = /Users/sam/Documents/PhD/taurex3/data/HITRAN/data
+xsec_path = /Users/sam/Documents/PhD/taurex3/data/plugin_test_data/
+
+
+[Chemistry]
+chemistry_type = taurex
+fill_gases = H2, He
+
+#    [[H2O]]
+#    gas_type = constant
+#    mix_ratio = 1.41253754e-3
+
+    [[AlONLTE]]
+    gas_type = constant
+    mix_ratio = 2.39883e-06
+
+[Temperature]
+profile_type = bitemp
+Trot_surface = 2231.0
+Tvib_surface = 2231.0
+P_surface = 1e6
+trot_points = 2231,3000,3500,
+tvib_points = 2231,3000,3500,
+pressure_points = 1e5, 1e2,1e0,
+Trot_top = 4000.0
+Tvib_top = 4500.0
+P_top = 1e-2
+
+[Pressure]
+profile_type = Simple
+atm_min_pressure = 1e-4
+atm_max_pressure = 1e6
+nlayers = 100
+
+
+[Planet]
+planet_type = Simple
+planet_mass = 0.894
+planet_radius = 1.854
+planet_distance = 0.0334
+
+[Star]
+star_type = blackbody
+temperature = 6329
+radius = 1.756
+mass = 1.458
+
+[Model]
+model_type = nlte+transmission
+
+    [[NLTEAbsorption]]
+
+    [[Rayleigh]]
+
+    [[SimpleClouds]]
+    clouds_pressure = 8.12831
