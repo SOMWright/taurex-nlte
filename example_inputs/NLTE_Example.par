@@ -5,7 +5,7 @@ xsec_path = /Users/sam/Documents/PhD/taurex3/data/plugin_test_data/
 chemistry_type = taurex
 
     [[AlONLTE]]
-    gas_type = constant
+    gas_type = npointgas
     mix_ratio = 1e-3
 
 [Temperature]
