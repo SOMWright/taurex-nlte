@@ -48,7 +48,8 @@ def NLTE_mol_split_func(molecule=None, tokens=None):
 def generate_profile_dict_with_bitemp(model):
     out = {}
     out['temp_profile']=model.temperatureProfile
-    out['nlte_temp_profile']=model._temperature_profile.nlte_profile
+    if model._temperature_profile._log_name == "taurex.NLTETempProfile":
+        out['nlte_temp_profile']=model._temperature_profile.nlte_profile
     out['active_mix_profile']=model.chemistry.activeGasMixProfile
     out['inactive_mix_profile']=model.chemistry.inactiveGasMixProfile
     out['density_profile']=model.densityProfile
