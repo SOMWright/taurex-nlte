@@ -1,2 +1,2 @@
 from .npointgas import NPointGas
-from .NLTETempProfile import NLTETempProfile
+from .NLTETempProfile import NLTETempProfile, TemperatureTypeEnum

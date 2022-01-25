@@ -3,7 +3,7 @@ import taurex.util.util
 from taurex.contributions import AbsorptionContribution
 from taurex.cache import OpacityCache, GlobalCache
 from ..util.util import NLTE_mol_split_func, generate_profile_dict_with_bitemp
-
+from ..nlte_profiles import TemperatureTypeEnum
 
 class NLTEAbsorption(AbsorptionContribution):
 
@@ -88,9 +88,13 @@ class NLTEAbsorption(AbsorptionContribution):
                     sigma_xsec[idx_layer] += xsec.opacity(temperature, pressure, wngrid,
                                                           temperature_vib=temperature + self._vib_offset) * gas_mix[
                                                  idx_layer]
-                # elif model._temperature_profile._log_name == "taurex.NLTETempProfile":
-                #     sigma_xsec[idx_layer] += xsec.opacity(temperature[0], pressure, wngrid,
-                #                                           temperature_vib=temperature[1]) * gas_mix[idx_layer]
+                elif model._temperature_profile._log_name == "taurex.NLTETempProfile":
+                    if model._temperature_profile.profile_temp_type is TemperatureTypeEnum.ROTATIONAL:
+                        sigma_xsec[idx_layer] += xsec.opacity(temperature[0], pressure, wngrid,
+                                                              temperature_vib=model._temperature_profile.nlte_profile[idx_layer]) * gas_mix[idx_layer]
+                    elif model._temperature_profile.profile_temp_type is TemperatureTypeEnum.VIBRATIONAL:
+                        sigma_xsec[idx_layer] += xsec.opacity(model._temperature_profile.nlte_profile[idx_layer], pressure, wngrid,
+                                                              temperature_vib=temperature[0]) * gas_mix[idx_layer]
                 else:
                     sigma_xsec[idx_layer] += xsec.opacity(temperature, pressure, wngrid) * gas_mix[idx_layer]
 
