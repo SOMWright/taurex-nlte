@@ -90,11 +90,11 @@ class NLTEAbsorption(AbsorptionContribution):
                                                  idx_layer]
                 elif model._temperature_profile._log_name == "taurex.NLTETempProfile":
                     if model._temperature_profile.profile_temp_type is TemperatureTypeEnum.ROTATIONAL:
-                        sigma_xsec[idx_layer] += xsec.opacity(temperature[0], pressure, wngrid,
+                        sigma_xsec[idx_layer] += xsec.opacity(temperature, pressure, wngrid,
                                                               temperature_vib=model._temperature_profile.nlte_profile[idx_layer]) * gas_mix[idx_layer]
                     elif model._temperature_profile.profile_temp_type is TemperatureTypeEnum.VIBRATIONAL:
                         sigma_xsec[idx_layer] += xsec.opacity(model._temperature_profile.nlte_profile[idx_layer], pressure, wngrid,
-                                                              temperature_vib=temperature[0]) * gas_mix[idx_layer]
+                                                              temperature_vib=temperature) * gas_mix[idx_layer]
                 else:
                     sigma_xsec[idx_layer] += xsec.opacity(temperature, pressure, wngrid) * gas_mix[idx_layer]
 
