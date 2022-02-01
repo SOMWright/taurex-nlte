@@ -4,6 +4,7 @@ from taurex.contributions import AbsorptionContribution
 from taurex.cache import OpacityCache, GlobalCache
 from ..util.util import NLTE_mol_split_func, generate_profile_dict_with_bitemp
 from ..nlte_profiles import TemperatureTypeEnum
+from ..opacities import NLTEHDF5Opacity
 
 class NLTEAbsorption(AbsorptionContribution):
 
@@ -81,23 +82,25 @@ class NLTEAbsorption(AbsorptionContribution):
                 self.debug('Got index,tp %s %s', idx_layer, tp)
                 temperature, pressure = tp
                 # print(gas,self._opacity_cache[gas].opacity(temperature,pressure,wngrid),gas_mix[idx_layer])
-                if self._rot_offset is not None:
-                    sigma_xsec[idx_layer] += xsec.opacity(temperature + self._rot_offset, pressure, wngrid,
-                                                          temperature_vib=temperature) * gas_mix[idx_layer]
-                elif self._vib_offset is not None:
-                    sigma_xsec[idx_layer] += xsec.opacity(temperature, pressure, wngrid,
-                                                          temperature_vib=temperature + self._vib_offset) * gas_mix[
-                                                 idx_layer]
-                elif model._temperature_profile._log_name == "taurex.NLTETempProfile":
-                    if model._temperature_profile.profile_temp_type is TemperatureTypeEnum.ROTATIONAL:
-                        sigma_xsec[idx_layer] += xsec.opacity(temperature, pressure, wngrid,
-                                                              temperature_vib=model._temperature_profile.nlte_profile[idx_layer]) * gas_mix[idx_layer]
-                    elif model._temperature_profile.profile_temp_type is TemperatureTypeEnum.VIBRATIONAL:
-                        sigma_xsec[idx_layer] += xsec.opacity(model._temperature_profile.nlte_profile[idx_layer], pressure, wngrid,
+                if isinstance(xsec, NLTEHDF5Opacity):
+                    if self._rot_offset is not None:
+                        sigma_xsec[idx_layer] += xsec.opacity(temperature + self._rot_offset, pressure, wngrid,
                                                               temperature_vib=temperature) * gas_mix[idx_layer]
+                    elif self._vib_offset is not None:
+                        sigma_xsec[idx_layer] += xsec.opacity(temperature, pressure, wngrid,
+                                                              temperature_vib=temperature + self._vib_offset) * gas_mix[
+                                                     idx_layer]
+                    elif model._temperature_profile._log_name == "taurex.NLTETempProfile":
+                        if model._temperature_profile.profile_temp_type is TemperatureTypeEnum.ROTATIONAL:
+                            sigma_xsec[idx_layer] += xsec.opacity(temperature, pressure, wngrid,
+                                                                  temperature_vib=model._temperature_profile.nlte_profile[idx_layer]) * gas_mix[idx_layer]
+                        elif model._temperature_profile.profile_temp_type is TemperatureTypeEnum.VIBRATIONAL:
+                            sigma_xsec[idx_layer] += xsec.opacity(model._temperature_profile.nlte_profile[idx_layer], pressure, wngrid,
+                                                                  temperature_vib=temperature) * gas_mix[idx_layer]
+                    else:
+                        sigma_xsec[idx_layer] += xsec.opacity(temperature, pressure, wngrid) * gas_mix[idx_layer]
                 else:
-                    sigma_xsec[idx_layer] += xsec.opacity(temperature, pressure, wngrid) * gas_mix[idx_layer]
-
+                    sigma_xsec[idx_layer] += xsec.opacity(temperature, pressure, wngrid,) * gas_mix[idx_layer]
             self.sigma_xsec = sigma_xsec
 
             self.debug('SIGMAXSEC %s', self.sigma_xsec)
