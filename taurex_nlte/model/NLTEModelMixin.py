@@ -41,7 +41,8 @@ class NLTEModelMixin(ForwardModelMixin):
                                                      cutoff_grid=False)
 
             tp_profiles.update(self.temperatureProfile, weight=weight)
-            nlte_tp_profiles.update(self._temperature_profile.nlte_profile, weight=weight)
+            if model._temperature_profile._log_name == "taurex.NLTETempProfile":
+                nlte_tp_profiles.update(self._temperature_profile.nlte_profile, weight=weight)
             active_gases.update(self.chemistry.activeGasMixProfile,
                                 weight=weight)
             inactive_gases.update(self.chemistry.inactiveGasMixProfile,
